@@ -44,6 +44,7 @@ public class Main extends Plugin {
         getProxy().getPluginManager().registerCommand(this, new UnbanCommand(this));
         getProxy().getPluginManager().registerCommand(this, new InfoCommand(this));
         getProxy().getPluginManager().registerCommand(this, new KickCommand(this));
+        getProxy().getPluginManager().registerCommand(this, new WhatIsBan(this));
     }
 
     @Override

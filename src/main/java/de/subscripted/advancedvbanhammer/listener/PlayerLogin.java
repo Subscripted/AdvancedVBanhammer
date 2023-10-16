@@ -1,5 +1,6 @@
 package de.subscripted.advancedvbanhammer.listener;
 
+import java.sql.SQLException;
 import java.util.UUID;
 
 import de.subscripted.advancedvbanhammer.Main;
@@ -22,7 +23,7 @@ public class PlayerLogin implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onPlayerLogin(LoginEvent event) {
+    public void onPlayerLogin(LoginEvent event) throws SQLException {
         UUID uuid = event.getConnection().getUniqueId();
         if (BanManager.isBanned(String.valueOf(uuid))) {
             long current = System.currentTimeMillis();

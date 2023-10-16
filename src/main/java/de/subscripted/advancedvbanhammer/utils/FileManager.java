@@ -100,7 +100,8 @@ public class FileManager {
     public static Configuration getBanIdsConfig() {
         return banIdsConfig;
     }
-    public static Configuration getTempBanIdConfig(){
+
+    public static Configuration getTempBanIdConfig() {
         return tempBanIdConfig;
     }
 
@@ -258,6 +259,7 @@ public class FileManager {
             e.printStackTrace();
         }
     }
+
     public static void setDefaultTempBanIdConfig() {
         Configuration cfg = getTempBanIdConfig();
 
@@ -295,9 +297,11 @@ public class FileManager {
     public static String getMessage(ConfigMessage configMessage) {
         return config.getString("message." + configMessage.name().toLowerCase()).replace("&", "§");
     }
+
     public static String getPermission(Permissions configPermission) {
         return Objects.requireNonNull(config.getString("permissions." + configPermission.name().toLowerCase())).replace("&", "§");
     }
+
     public static List<String> getlist(ListMessage listMessage) {
         return config.getStringList("lists." + listMessage.name().toLowerCase());
     }

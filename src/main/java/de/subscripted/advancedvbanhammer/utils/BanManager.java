@@ -51,16 +51,14 @@ public class BanManager {
         }
     }
 
-    public static boolean isBanned(String uuid) {
+    public static boolean isBanned(String uuid) throws SQLException {
         try (PreparedStatement statement = MySQL.getConnection().prepareStatement("SELECT Ende FROM BannedPlayers WHERE UUID = ?")) {
             statement.setString(1, uuid);
             ResultSet rs = statement.executeQuery();
             return rs.next();
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
-        return false;
     }
+
 
     public static long getEnd(String uuid) {
         try (PreparedStatement statement = MySQL.getConnection().prepareStatement("SELECT Ende FROM BannedPlayers WHERE UUID = ?")) {

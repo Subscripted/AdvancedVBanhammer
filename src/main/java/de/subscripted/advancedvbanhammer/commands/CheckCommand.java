@@ -9,6 +9,8 @@ import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
+
+import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
 
@@ -41,10 +43,18 @@ public class CheckCommand extends Command {
             }
 
             String playername = args[0];
-            player.sendMessage(plugin.getPrefix() + FileManager.getMessage(ConfigMessage.CHECK_IF_BANNED).replace("%playername%", playername) + (BanManager.isBanned(getUUID(playername)) ?  FileManager.getMessage(ConfigMessage.CHECK_IS_BANNED): FileManager.getMessage(ConfigMessage.CHECK_IS_NOT_BANNED)));
-            if (BanManager.isBanned(getUUID(playername))) {
-                player.sendMessage(plugin.getPrefix() + ChatColor.YELLOW + "Grund: " + ChatColor.RED + BanManager.getReason(getUUID(playername)));
-                player.sendMessage(plugin.getPrefix() + ChatColor.YELLOW + "Verbleibende Zeit: " + ChatColor.RED + BanManager.getRemainingTime(getUUID(playername)));
+            try {
+                player.sendMessage(plugin.getPrefix() + FileManager.getMessage(ConfigMessage.CHECK_IF_BANNED).replace("%playername%", playername) + (BanManager.isBanned(getUUID(playername)) ?  FileManager.getMessage(ConfigMessage.CHECK_IS_BANNED): FileManager.getMessage(ConfigMessage.CHECK_IS_NOT_BANNED)));
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            try {
+                if (BanManager.isBanned(getUUID(playername))) {
+                    player.sendMessage(plugin.getPrefix() + ChatColor.YELLOW + "Grund: " + ChatColor.RED + BanManager.getReason(getUUID(playername)));
+                    player.sendMessage(plugin.getPrefix() + ChatColor.YELLOW + "Verbleibende Zeit: " + ChatColor.RED + BanManager.getRemainingTime(getUUID(playername)));
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
             }
             return;
         }

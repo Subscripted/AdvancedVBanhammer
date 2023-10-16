@@ -11,6 +11,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 
 import java.io.File;
+import java.sql.SQLException;
 import java.util.UUID;
 
 public class UnbanCommand extends Command {
@@ -33,9 +34,13 @@ public class UnbanCommand extends Command {
 
         if (args.length == 1) {
             String playername = args[0];
-            if (!BanManager.isBanned(getUUID(playername))) {
-                player.sendMessage(plugin.getPrefix() + FileManager.getMessage(ConfigMessage.PLAYER_IS_NOT_BANNED).replace("%playername%", playername));
-                return;
+            try {
+                if (!BanManager.isBanned(getUUID(playername))) {
+                    player.sendMessage(plugin.getPrefix() + FileManager.getMessage(ConfigMessage.PLAYER_IS_NOT_BANNED).replace("%playername%", playername));
+                    return;
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
             }
             player.sendMessage(plugin.getPrefix() + FileManager.getMessage(ConfigMessage.UNBANNED_PLAYER).replace("%playername%", playername));
             BanManager.unban(getUUID(playername));

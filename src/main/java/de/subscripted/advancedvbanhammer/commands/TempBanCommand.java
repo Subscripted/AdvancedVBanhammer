@@ -14,6 +14,7 @@ import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.TabExecutor;
 import net.md_5.bungee.config.Configuration;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -38,9 +39,13 @@ public class TempBanCommand extends Command implements TabExecutor {
 
         if (args.length >= 2) {
             String playername = args[0];
-            if (BanManager.isBanned(getUUID(playername))) {
-                player.sendMessage(plugin.getPrefix() + FileManager.getMessage(ConfigMessage.PLAYER_IS_BANNED).replace("%playername%", playername));
-                return;
+            try {
+                if (BanManager.isBanned(getUUID(playername))) {
+                    player.sendMessage(plugin.getPrefix() + FileManager.getMessage(ConfigMessage.PLAYER_IS_BANNED).replace("%playername%", playername));
+                    return;
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
             }
 
             int banId;
