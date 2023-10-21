@@ -101,11 +101,29 @@ public class BanManager {
         long days = (seconds / 86400) % 7;
         long weeks = seconds / 604800;
 
-        return String.format("§e%d Woche(n) %d Tag(e) %d Stunde(n) %d Minute(n) %d Sekunde(n)", weeks, days, hours, minutes, seconds % 60);
+        StringBuilder remainingTime = new StringBuilder();
+
+        if (weeks > 0) {
+            remainingTime.append("§e").append(weeks).append(" Woche(n) ");
+        }
+        if (days > 0) {
+            remainingTime.append("§e").append(days).append(" Tag(e) ");
+        }
+        if (hours > 0) {
+            remainingTime.append("§e").append(hours).append(" Stunde(n) ");
+        }
+        if (minutes > 0) {
+            remainingTime.append("§e").append(minutes).append(" Minute(n) ");
+        }
+        if (seconds % 60 > 0) {
+            remainingTime.append("§e").append(seconds % 60).append(" Sekunde(n) ");
+        }
+
+        return remainingTime.toString().trim();
     }
 
     private static void sendBanWebhook(String bannedPlayer, String bannedBy, String reason, String remainingTime) {
-        DiscordWebhook webhook = new DiscordWebhook("https://discord.com/api/webhooks/your_webhook_url_here");
+        DiscordWebhook webhook = new DiscordWebhook("https://discord.com/api/webhooks/1065969605471911976/7q8WWLvQx2Io-03BAl3zUzAAQL8BOqBjE9eFooguPKw8mCHdYqRDDLgsiKvEdL9PMqCL");
         webhook.addEmbedObjects(new DiscordWebhook.EmbedObject()
                 .setTitle("Varilx Ban")
                 .setDescription("- **Gebannt: **" + bannedPlayer + "\n" +

@@ -32,33 +32,64 @@ public class WhatIsBan extends Command implements TabExecutor {
 
         if (args.length == 1 && args[0].equalsIgnoreCase("temp")) {
             Set<String> reasonIds = (Set<String>) FileManager.getTempBanIdConfig().getSection("temp-ban-ids").getKeys();
-            StringBuilder reasonsMessage = new StringBuilder("&aTempBan Reasons:\n");
+            StringBuilder reasonsMessage = new StringBuilder(" §7TempBan Reasons:\n");
 
             for (String reasonId : reasonIds) {
                 String reasonName = FileManager.getTempBanIdConfig().getString("temp-ban-ids." + reasonId + ".name");
-                reasonsMessage.append("&e").append(reasonId).append("&7: ").append(reasonName).append("\n");
+                String time = FileManager.getTempBanIdConfig().getString("temp-ban-ids." + reasonId + ".time");
+                String formattedTime = formatTime(time);
+                reasonsMessage.append("&e").append(reasonId).append("&7: ").append(reasonName).append(" (Time: ").append(formattedTime).append(")\n");
             }
-
-            player.sendMessage(reasonsMessage.toString());
-        }else
-        if (args.length == 1 && args[0].equalsIgnoreCase("perm")){
+            player.sendMessage("§7§n[]=====[§cAdvancedVBanhammer§7]=====[]");
+            player.sendMessage(reasonsMessage.toString().replace("&", "§"));
+            player.sendMessage("§7§n[]================================[]");
+        } else if (args.length == 1 && args[0].equalsIgnoreCase("perm")) {
             Set<String> reasonIds = (Set<String>) FileManager.getBanIdsConfig().getSection("ban-ids").getKeys();
             StringBuilder reasonMessage = new StringBuilder("&aBan Reasons:\n");
 
-            for (String reasonId : reasonIds){
-                String reasonName = FileManager.getBanIdsConfig().getString("ban-ids. " + reasonId);
+            for (String reasonId : reasonIds) {
+                String reasonName = FileManager.getBanIdsConfig().getString("ban-ids." + reasonId + ".name");
                 reasonMessage.append("&e").append(reasonId).append("&7: ").append(reasonName).append("\n");
             }
+
+            player.sendMessage(reasonMessage.toString());
         }
     }
 
     @Override
     public Iterable<String> onTabComplete(CommandSender sender, String[] args) {
         List<String> list = new ArrayList<>();
-        if (args.length == 1){
+        if (args.length == 1) {
             list.add("perm");
             list.add("temp");
         }
         return list;
+    }
+
+    private String formatTime(String time) {
+        long seconds = Long.parseLong(time.substring(0, time.length() - 1));
+        char unit = time.charAt(time.length() - 1);
+        String unitName;
+
+        switch (unit) {
+            case 's':
+                unitName = "Sekunde(n)";
+                break;
+            case 'm':
+                unitName = "Minute(n)";
+                break;
+            case 'h':
+                unitName = "Stunde(n)";
+                break;
+            case 'd':
+                unitName = "Tag(e)";
+                break;
+            case 'w':
+                unitName = "Woche(n)";
+                break;
+            default:
+                return "Ungültige Einheit";
+        }
+        return seconds + " " + unitName;
     }
 }
