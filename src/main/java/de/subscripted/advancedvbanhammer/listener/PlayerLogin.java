@@ -28,7 +28,7 @@ public class PlayerLogin implements Listener {
         UUID uuid = event.getConnection().getUniqueId();
         if (BanManager.isBanned(String.valueOf(uuid))) {
             long current = System.currentTimeMillis();
-            long end = BanManager.getEnd(uuid.toString()).get();
+            long end = BanManager.getEnd(uuid.toString());
             if (current < end | end == -1) {
                 String reason = String.valueOf(BanManager.getReason(uuid.toString()));
                 String remainingTime = String.valueOf(BanManager.getRemainingTime(uuid.toString()));

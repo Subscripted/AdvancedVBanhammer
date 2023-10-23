@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 public class BanManager {
     private Main plugin;
@@ -27,7 +28,7 @@ public class BanManager {
         ProxiedPlayer player = ProxyServer.getInstance().getPlayer(playername);
         String IP = null;
 
-        try (PreparedStatement statement = MySQL.getConnection().prepareStatement("INSERT INTO BannedPlayers (Spielername, UUID, Ende, Grund) VALUES (?, ?, ?, ?)")) {
+        try (PreparedStatement statement = MySQL.getConnection().get().prepareStatement("INSERT INTO BannedPlayers (Spielername, UUID, Ende, Grund) VALUES (?, ?, ?, ?)")) {
             statement.setString(1, playername);
             statement.setString(2, uuid);
             statement.setLong(3, end);
@@ -35,6 +36,10 @@ public class BanManager {
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
 
         if (player != null) {
@@ -45,25 +50,33 @@ public class BanManager {
     }
 
     public static void unban(String uuid) {
-        try (PreparedStatement statement = MySQL.getConnection().prepareStatement("DELETE FROM BannedPlayers WHERE UUID = ?")) {
+        try (PreparedStatement statement = MySQL.getConnection().get().prepareStatement("DELETE FROM BannedPlayers WHERE UUID = ?")) {
             statement.setString(1, uuid);
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 
     public static boolean isBanned(String uuid) throws SQLException {
-        try (PreparedStatement statement = MySQL.getConnection().prepareStatement("SELECT Ende FROM BannedPlayers WHERE UUID = ?")) {
+        try (PreparedStatement statement = MySQL.getConnection().get().prepareStatement("SELECT Ende FROM BannedPlayers WHERE UUID = ?")) {
             statement.setString(1, uuid);
             ResultSet rs = statement.executeQuery();
             return rs.next();
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 
 
     public static long getEnd(String uuid) {
-        try (PreparedStatement statement = MySQL.getConnection().prepareStatement("SELECT Ende FROM BannedPlayers WHERE UUID = ?")) {
+        try (PreparedStatement statement = MySQL.getConnection().get().prepareStatement("SELECT Ende FROM BannedPlayers WHERE UUID = ?")) {
             statement.setString(1, uuid);
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
@@ -71,19 +84,27 @@ public class BanManager {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
         return -1;
     }
 
     public static List<String> getBannedPlayers() {
         List<String> list = new ArrayList<>();
-        try (PreparedStatement statement = MySQL.getConnection().prepareStatement("SELECT Spielername FROM BannedPlayers")) {
+        try (PreparedStatement statement = MySQL.getConnection().get().prepareStatement("SELECT Spielername FROM BannedPlayers")) {
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
                 list.add(rs.getString("Spielername"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
         return list;
     }
@@ -143,7 +164,7 @@ public class BanManager {
     public static void checkTempBans() {
         long currentTime = System.currentTimeMillis();
 
-        try (PreparedStatement statement = MySQL.getConnection().prepareStatement("SELECT UUID, Ende FROM BannedPlayers WHERE Ende > 0")) {
+        try (PreparedStatement statement = MySQL.getConnection().get().prepareStatement("SELECT UUID, Ende FROM BannedPlayers WHERE Ende > 0")) {
             ResultSet rs = statement.executeQuery();
 
             while (rs.next()) {
@@ -156,10 +177,14 @@ public class BanManager {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
     public static String getReason(String uuid) {
-        try (PreparedStatement statement = MySQL.getConnection().prepareStatement("SELECT Grund FROM BannedPlayers WHERE UUID = ?")) {
+        try (PreparedStatement statement = MySQL.getConnection().get().prepareStatement("SELECT Grund FROM BannedPlayers WHERE UUID = ?")) {
             statement.setString(1, uuid);
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
@@ -167,6 +192,10 @@ public class BanManager {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
         return "";
     }
