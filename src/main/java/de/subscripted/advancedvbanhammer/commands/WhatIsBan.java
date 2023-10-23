@@ -40,7 +40,7 @@ public class WhatIsBan extends Command implements TabExecutor {
                 String formattedTime = formatTime(time);
                 reasonsMessage.append("&e").append(reasonId).append("&7: ").append(reasonName).append(" (Time: ").append(formattedTime).append(")\n");
             }
-            player.sendMessage("§7§n[]=====[§cAdvancedVBanhammer§7]=====[]");
+            player.sendMessage("§7§[]=====[§cAdvancedVBanhammer§7]=====[]");
             player.sendMessage(reasonsMessage.toString().replace("&", "§"));
             player.sendMessage("§7§n[]================================[]");
         } else if (args.length == 1 && args[0].equalsIgnoreCase("perm")) {
