@@ -13,6 +13,7 @@ import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import net.md_5.bungee.event.EventPriority;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
 public class PlayerLogin implements Listener {
 
@@ -23,15 +24,14 @@ public class PlayerLogin implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onPlayerLogin(LoginEvent event) throws SQLException {
+    public void onPlayerLogin(LoginEvent event) throws SQLException, ExecutionException, InterruptedException {
         UUID uuid = event.getConnection().getUniqueId();
         if (BanManager.isBanned(String.valueOf(uuid))) {
             long current = System.currentTimeMillis();
-            long end = BanManager.getEnd(uuid.toString());
+            long end = BanManager.getEnd(uuid.toString()).get();
             if (current < end | end == -1) {
-                event.setCancelled(true);
-                String reason = BanManager.getReason(uuid.toString());
-                String remainingTime = BanManager.getRemainingTime(uuid.toString());
+                String reason = String.valueOf(BanManager.getReason(uuid.toString()));
+                String remainingTime = String.valueOf(BanManager.getRemainingTime(uuid.toString()));
                 String banMessage = FileManager.getlist(ListMessage.YOU_GOT_BANNED_TEMP).toString().substring(1, FileManager.getlist(ListMessage.YOU_GOT_BANNED_TEMP).toString().length() - 1).replace("%reason%", reason).replace("%time%", remainingTime).replace(", ", "\n").replace("&","§");
                 event.setCancelled(true);
                 event.setCancelReason(banMessage);

@@ -38,10 +38,17 @@ public class BanCommand extends Command implements TabExecutor {
 
         ProxiedPlayer player = (ProxiedPlayer) sender;
 
-
         if (args.length >= 2) {
             String placeholder = "%playername%";
             String playername = args[0];
+
+            try {
+                Integer.parseInt(args[args.length - 1]);
+            } catch (NumberFormatException e) {
+                player.sendMessage(plugin.getPrefix() + FileManager.getMessage(ConfigMessage.MUST_BE_A_NUMBER));
+                return;
+            }
+
             String banMessage = FileManager.getMessage(ConfigMessage.PLAYER_BAN).replace(placeholder, playername);
             try {
                 if (BanManager.isBanned(getUUID(playername))) {
@@ -51,7 +58,6 @@ public class BanCommand extends Command implements TabExecutor {
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
-
             String banIdStr = args[1];
             Configuration banIdsConfig = FileManager.getBanIdsConfig();
             if (banIdsConfig.contains("ban-ids." + banIdStr)) {

@@ -266,10 +266,13 @@ public class FileManager {
         if (!cfg.contains("temp-ban-ids")) {
             cfg.set("temp-ban-ids.1.name", "Beleidigung");
             cfg.set("temp-ban-ids.1.time", "12h");
+
             cfg.set("temp-ban-ids.2.name", "Spam");
             cfg.set("temp-ban-ids.2.time", "1h");
+
             cfg.set("temp-ban-ids.3.name", "Werbung");
             cfg.set("temp-ban-ids.3.time", "2w");
+
             try {
                 ConfigurationProvider.getProvider(YamlConfiguration.class).save(cfg, tempBanIdsFile);
             } catch (IOException e) {

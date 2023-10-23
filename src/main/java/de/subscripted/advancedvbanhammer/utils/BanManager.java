@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public class BanManager {
     private Main plugin;
@@ -19,6 +20,7 @@ public class BanManager {
     public BanManager(Main plugin) {
         this.plugin = plugin;
     }
+
 
     public static void ban(String uuid, String playername, String reason, long seconds) {
         long end = (seconds == -1) ? -1 : System.currentTimeMillis() + (seconds * 1000);
