@@ -1,0 +1,42 @@
+package de.subscripted.advancedvbanhammer.command;
+
+import de.subscripted.advancedvbanhammer.BungeeBan;
+import de.subscripted.advancedvbanhammer.util.MuteManager;
+import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.api.plugin.Command;
+
+public class MuteCommand extends Command {
+
+    public MuteCommand() {
+        super("mute");
+    }
+
+    @Override
+    public void execute(CommandSender sender, String[] args) {
+        if (args.length < 2) {
+            sender.sendMessage(TextComponent.fromLegacyText("§cVerwendung: /mute <Spieler> <Grund>"));
+            return;
+        }
+
+        String playerName = args[0];
+        StringBuilder reason = new StringBuilder();
+        for (int i = 1; i < args.length; i++) {
+            reason.append(args[i]).append(" ");
+        }
+        reason = new StringBuilder(reason.toString().trim());
+
+        ProxiedPlayer targetPlayer = BungeeBan.getInstance().getProxy().getPlayer(playerName);
+
+        if (targetPlayer != null) {
+            MuteManager muteManager = new MuteManager();
+            muteManager.mutePlayer(targetPlayer.getUniqueId(), true);
+            targetPlayer.sendMessage(TextComponent.fromLegacyText("§cDu wurdest gemutet für: " + reason));
+        } else {
+            sender.sendMessage(TextComponent.fromLegacyText("§cSpieler nicht gefunden."));
+        }
+
+        sender.sendMessage(TextComponent.fromLegacyText("§aSpieler " + playerName + " wurde gemutet für: " + reason));
+    }
+}
