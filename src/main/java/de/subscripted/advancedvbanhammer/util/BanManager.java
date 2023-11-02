@@ -145,7 +145,7 @@ public class BanManager {
     }
 
     private static void sendBanWebhook(String bannedPlayer, String bannedBy, String reason, String remainingTime) {
-        DiscordWebhook webhook = new DiscordWebhook("https://discord.com/api/webhooks/1065969605471911976/7q8WWLvQx2Io-03BAl3zUzAAQL8BOqBjE9eFooguPKw8mCHdYqRDDLgsiKvEdL9PMqCL");
+        DiscordWebhook webhook = new DiscordWebhook(""); //TODO: Configurate your Discord Webhook URL
         webhook.addEmbedObjects(new DiscordWebhook.EmbedObject()
                 .setTitle("Varilx Ban")
                 .setDescription("- **Gebannt: **" + bannedPlayer + "\n" +
