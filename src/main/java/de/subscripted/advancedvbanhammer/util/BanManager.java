@@ -1,6 +1,6 @@
-package de.subscripted.advancedvbanhammer.utils;
+package de.subscripted.advancedvbanhammer.util;
 
-import de.subscripted.advancedvbanhammer.Main;
+import de.subscripted.advancedvbanhammer.BungeeBan;
 import de.subscripted.advancedvbanhammer.enums.ListMessage;
 import de.subscripted.advancedvbanhammer.sql.MySQL;
 import net.md_5.bungee.api.ProxyServer;
@@ -12,13 +12,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 public class BanManager {
-    private Main plugin;
+    private BungeeBan plugin;
 
-    public BanManager(Main plugin) {
+    public BanManager(BungeeBan plugin) {
         this.plugin = plugin;
     }
 
@@ -146,7 +145,7 @@ public class BanManager {
     }
 
     private static void sendBanWebhook(String bannedPlayer, String bannedBy, String reason, String remainingTime) {
-        DiscordWebhook webhook = new DiscordWebhook("https://discord.com/api/webhooks/1065969605471911976/7q8WWLvQx2Io-03BAl3zUzAAQL8BOqBjE9eFooguPKw8mCHdYqRDDLgsiKvEdL9PMqCL");
+        DiscordWebhook webhook = new DiscordWebhook(""); //TODO: Configurate your Discord Webhook URL
         webhook.addEmbedObjects(new DiscordWebhook.EmbedObject()
                 .setTitle("Varilx Ban")
                 .setDescription("- **Gebannt: **" + bannedPlayer + "\n" +
@@ -183,6 +182,7 @@ public class BanManager {
             throw new RuntimeException(e);
         }
     }
+
     public static String getReason(String uuid) {
         try (PreparedStatement statement = MySQL.getConnection().get().prepareStatement("SELECT Grund FROM BannedPlayers WHERE UUID = ?")) {
             statement.setString(1, uuid);

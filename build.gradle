@@ -23,7 +23,8 @@ dependencies {
     implementation 'org.json:json:20090211'
 }
 
-def targetJavaVersion = 8
+def targetJavaVersion = 17
+
 java {
     def javaVersion = JavaVersion.toVersion(targetJavaVersion)
     sourceCompatibility = javaVersion

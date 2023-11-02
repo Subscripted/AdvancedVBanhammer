@@ -1,14 +1,15 @@
-package de.subscripted.advancedvbanhammer.commands;
+package de.subscripted.advancedvbanhammer.command;
 
-import de.subscripted.advancedvbanhammer.Main;
+import de.subscripted.advancedvbanhammer.BungeeBan;
 import de.subscripted.advancedvbanhammer.enums.BanUnit;
 import de.subscripted.advancedvbanhammer.enums.ConfigMessage;
 import de.subscripted.advancedvbanhammer.enums.Permissions;
-import de.subscripted.advancedvbanhammer.utils.BanManager;
-import de.subscripted.advancedvbanhammer.utils.FileManager;
-import de.subscripted.advancedvbanhammer.utils.UUIDFetcher;
+import de.subscripted.advancedvbanhammer.util.BanManager;
+import de.subscripted.advancedvbanhammer.util.FileManager;
+import de.subscripted.advancedvbanhammer.util.UUIDFetcher;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.TabExecutor;
@@ -20,28 +21,22 @@ import java.util.List;
 import java.util.UUID;
 
 public class TempBanCommand extends Command implements TabExecutor {
-
-    private Main plugin;
-
-    public TempBanCommand(Main plugin) {
+    public TempBanCommand() {
         super("tempban");
-        this.plugin = plugin;
     }
 
     @Override
     public void execute(CommandSender sender, String[] args) {
-        if (!(sender instanceof ProxiedPlayer)) {
-            sender.sendMessage(plugin.getPrefix() + FileManager.getMessage(ConfigMessage.SENDER_IS_CONSOLE));
+        if (!(sender instanceof ProxiedPlayer player)) {
+            sender.sendMessage(TextComponent.fromLegacyText(BungeeBan.getInstance().getPrefix() + FileManager.getMessage(ConfigMessage.SENDER_IS_CONSOLE)));
             return;
         }
-
-        ProxiedPlayer player = (ProxiedPlayer) sender;
 
         if (args.length >= 2) {
             String playername = args[0];
             try {
                 if (BanManager.isBanned(getUUID(playername))) {
-                    player.sendMessage(plugin.getPrefix() + FileManager.getMessage(ConfigMessage.PLAYER_IS_BANNED).replace("%playername%", playername));
+                    player.sendMessage(TextComponent.fromLegacyText(BungeeBan.getInstance().getPrefix() + FileManager.getMessage(ConfigMessage.PLAYER_IS_BANNED).replace("%playername%", playername)));
                     return;
                 }
             } catch (SQLException e) {
@@ -52,7 +47,7 @@ public class TempBanCommand extends Command implements TabExecutor {
             try {
                 banId = Integer.parseInt(args[1]);
             } catch (NumberFormatException e) {
-                player.sendMessage(plugin.getPrefix() + FileManager.getMessage(ConfigMessage.WRONG_BAN_ID));
+                player.sendMessage(TextComponent.fromLegacyText(BungeeBan.getInstance().getPrefix() + FileManager.getMessage(ConfigMessage.WRONG_BAN_ID)));
                 return;
             }
 
@@ -65,10 +60,10 @@ public class TempBanCommand extends Command implements TabExecutor {
                 long time = parseTime(banTimeString);
                 if (time > 0) {
                     BanManager.ban(getUUID(playername), playername, banReason, time);
-                    player.sendMessage(plugin.getPrefix() + FileManager.getMessage(ConfigMessage.TEMP_BAN_MESSAGE)
+                    player.sendMessage(TextComponent.fromLegacyText(BungeeBan.getInstance().getPrefix() + FileManager.getMessage(ConfigMessage.TEMP_BAN_MESSAGE)
                             .replace("%playername%", playername)
                             .replace("%time%", banTimeString)
-                            .replace("%unit%", ""));
+                            .replace("%unit%", "")));
                     for (ProxiedPlayer onlinePlayer : ProxyServer.getInstance().getPlayers()) {
                         if (onlinePlayer.hasPermission(FileManager.getPermission(Permissions.PERMISSION_SEEBANBROADCAST))) {
                             onlinePlayer.sendMessage(FileManager.getMessage(ConfigMessage.PLAYER_TEMP_BANNED_BROADCAST)
@@ -79,14 +74,14 @@ public class TempBanCommand extends Command implements TabExecutor {
                         }
                     }
                 } else {
-                    player.sendMessage(plugin.getPrefix() + FileManager.getMessage(ConfigMessage.UNIT_NOT_EXISTING));
+                    player.sendMessage(TextComponent.fromLegacyText(BungeeBan.getInstance().getPrefix() + FileManager.getMessage(ConfigMessage.UNIT_NOT_EXISTING)));
                 }
             } else {
-                player.sendMessage(plugin.getPrefix() + FileManager.getMessage(ConfigMessage.WRONG_BAN_ID));
+                player.sendMessage(TextComponent.fromLegacyText(BungeeBan.getInstance().getPrefix() + FileManager.getMessage(ConfigMessage.WRONG_BAN_ID)));
             }
             return;
         }
-        player.sendMessage(plugin.getPrefix() + FileManager.getMessage(ConfigMessage.TEMP_BAN_USAGE));
+        player.sendMessage(TextComponent.fromLegacyText(BungeeBan.getInstance().getPrefix() + FileManager.getMessage(ConfigMessage.TEMP_BAN_USAGE)));
     }
 
     private long parseTime(String timeString) {
@@ -102,9 +97,8 @@ public class TempBanCommand extends Command implements TabExecutor {
         return -1;
     }
 
-
     private String getUUID(String playername) {
-        ProxiedPlayer player = plugin.getProxy().getPlayer(playername);
+        ProxiedPlayer player = BungeeBan.getInstance().getProxy().getPlayer(playername);
         if (player != null) {
             return player.getUniqueId().toString();
         } else {
@@ -129,9 +123,7 @@ public class TempBanCommand extends Command implements TabExecutor {
             if (banIdsConfig != null) {
                 Configuration banIdsSection = banIdsConfig.getSection("temp-ban-ids");
                 if (banIdsSection != null) {
-                    for (String banId : banIdsSection.getKeys()) {
-                        tabCompletions.add(banId);
-                    }
+                    tabCompletions.addAll(banIdsSection.getKeys());
                 }
             }
         }

@@ -1,7 +1,7 @@
-package de.subscripted.advancedvbanhammer.utils;
+package de.subscripted.advancedvbanhammer.util;
 
 
-import de.subscripted.advancedvbanhammer.Main;
+import de.subscripted.advancedvbanhammer.BungeeBan;
 import de.subscripted.advancedvbanhammer.enums.ConfigMessage;
 import de.subscripted.advancedvbanhammer.enums.ListMessage;
 import de.subscripted.advancedvbanhammer.enums.Permissions;
@@ -13,7 +13,6 @@ import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -225,9 +224,8 @@ public class FileManager {
         }
     }
 
-
     public static void readConfig() {
-        Main.getInstance().setPrefix(ChatColor.translateAlternateColorCodes('&', config.getString("prefix") + " §r"));
+        BungeeBan.getInstance().setPrefix(ChatColor.translateAlternateColorCodes('&', config.getString("prefix") + " §r"));
     }
 
     public static void setDefaultMySQL() {
@@ -289,7 +287,7 @@ public class FileManager {
         MySQL.port = mysqlConfig.getString("port");
     }
 
-    public static void reloadPrefix(Main plugin) {
+    public static void reloadPrefix(BungeeBan plugin) {
         Configuration cfg = getConfig();
         if (cfg.contains("prefix")) {
             String prefix = ChatColor.translateAlternateColorCodes('&', cfg.getString("prefix") + " §r");

@@ -1,26 +1,21 @@
 package de.subscripted.advancedvbanhammer.listener;
 
-import de.subscripted.advancedvbanhammer.Main;
-import de.subscripted.advancedvbanhammer.utils.MuteManager;
+import de.subscripted.advancedvbanhammer.BungeeBan;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ChatEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
+import net.md_5.bungee.event.EventPriority;
+
 
 public class ChatListener implements Listener {
-
-    private MuteManager muteManager;
-
-    public ChatListener(MuteManager muteManager) {
-        this.muteManager = muteManager;
-    }
-
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onChat(ChatEvent event) {
-        ProxiedPlayer p = (ProxiedPlayer) event.getSender();
-        if (muteManager.isMuted(p.getUniqueId())) {
+        final var player = (ProxiedPlayer) event.getSender();
+        if (BungeeBan.getInstance().getMuteManager().isMuted(player.getUniqueId())) {
             event.setCancelled(true);
-            p.sendMessage("Du bist gemutet und kannst nicht schreiben.");
+            player.sendMessage(TextComponent.fromLegacyText("Du bist gemutet und kannst nicht schreiben."));
         }
     }
 }

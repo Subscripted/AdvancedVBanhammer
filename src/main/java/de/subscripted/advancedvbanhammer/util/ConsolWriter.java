@@ -1,6 +1,6 @@
-package de.subscripted.advancedvbanhammer.utils;
+package de.subscripted.advancedvbanhammer.util;
 
-import de.subscripted.advancedvbanhammer.Main;
+import de.subscripted.advancedvbanhammer.BungeeBan;
 import de.subscripted.advancedvbanhammer.sql.MySQL;
 
 public class ConsolWriter {
@@ -10,7 +10,7 @@ public class ConsolWriter {
         System.out.println("| Information:");
         System.out.println("|   Name: AdvancedVBanhammer");
         System.out.println("|   Developer: Subscripted");
-        System.out.println("|   Version: " + Main.getInstance().getDescription().getVersion());
+        System.out.println("|   Version: " + BungeeBan.getInstance().getDescription().getVersion());
         System.out.println("|   Storage: MySQL");
         System.out.println("|   License: Varilx.de");
         System.out.println("|   System: BungeeCord");
@@ -20,7 +20,7 @@ public class ConsolWriter {
     public static void setupFiles() {
         System.out.println("[]=====[Enabling Configs]=====[]");
         System.out.println("| Setup files...");
-        FileManager.setup(Main.getInstance());
+        FileManager.setup(BungeeBan.getInstance());
         System.out.println("| reading config´s...");
         FileManager.readConfig();
         System.out.printf("| reading MySQL...");
