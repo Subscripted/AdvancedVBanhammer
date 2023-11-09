@@ -18,7 +18,7 @@ public class ConsolWriter {
     }
 
     public static void setupFiles() {
-        System.out.println("[]=====[Enabling Configs]=====[]");
+        System.out.println("[]=====[Enabling Config]=====[]");
         System.out.println("| Setup files...");
         FileManager.setup(Main.getInstance());
         System.out.println("| reading config´s...");
