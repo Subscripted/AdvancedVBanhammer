@@ -1,6 +1,7 @@
 package de.subscripted.advancedvbanhammer.enums;
 
 public enum ConfigMessage {
+    WEBHOOK_URL,
     SENDER_IS_CONSOLE,
     PLAYER_NOT_FOUND,
     PLAYER_IS_BANNED,

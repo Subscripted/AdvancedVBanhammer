@@ -7,6 +7,7 @@ import de.subscripted.advancedvbanhammer.utils.FileManager;
 import de.subscripted.advancedvbanhammer.utils.UUIDFetcher;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 
@@ -16,54 +17,53 @@ import java.util.UUID;
 
 public class CheckCommand extends Command {
 
-    private Main plugin;
-
-    public CheckCommand(Main plugin) {
+    public CheckCommand() {
         super("check");
-        this.plugin = plugin;
     }
 
     @Override
     public void execute(CommandSender sender, String[] args) {
-        if (!(sender instanceof ProxiedPlayer)) {
-            sender.sendMessage(FileManager.getMessage(ConfigMessage.SENDER_IS_CONSOLE));
+        if (!(sender instanceof ProxiedPlayer player)) {
+            sender.sendMessage(TextComponent.fromLegacyText(FileManager.getMessage(ConfigMessage.SENDER_IS_CONSOLE)));
             return;
         }
-        ProxiedPlayer player = (ProxiedPlayer) sender;
-        if (args.length == 1) {
-            if (args[0].equalsIgnoreCase("list")) {
-                List<String> list = BanManager.getBannedPlayers();
-                if (list.size() == 0) {
-                    sender.sendMessage(plugin.getPrefix() + FileManager.getMessage(ConfigMessage.NO_ONE_IS_BANNED));
-                }
-                for (String allBanned : BanManager.getBannedPlayers()) {
-                    sender.sendMessage(plugin.getPrefix() + allBanned + "§9(§eGrund: §r§c " + BanManager.getReason(getUUID(allBanned)) + "§7)");
-                }
-                return;
-            }
 
-            String playername = args[0];
-            try {
-                player.sendMessage(plugin.getPrefix() + FileManager.getMessage(ConfigMessage.CHECK_IF_BANNED).replace("%playername%", playername) + (BanManager.isBanned(getUUID(playername)) ?  FileManager.getMessage(ConfigMessage.CHECK_IS_BANNED): FileManager.getMessage(ConfigMessage.CHECK_IS_NOT_BANNED)));
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-            try {
-                if (BanManager.isBanned(getUUID(playername))) {
-                    player.sendMessage(plugin.getPrefix() + ChatColor.YELLOW + "Grund: " + ChatColor.RED + BanManager.getReason(getUUID(playername)));
-                    player.sendMessage(plugin.getPrefix() + ChatColor.YELLOW + "Verbleibende Zeit: " + ChatColor.RED + BanManager.getRemainingTime(getUUID(playername)));
+        switch (args.length) {
+            case 1 -> {
+                if (args[0].equalsIgnoreCase("list")) {
+                    List<String> list = BanManager.getBannedPlayers();
+                    if (list.isEmpty()) {
+                        sender.sendMessage(TextComponent.fromLegacyText(Main.getInstance().getPrefix() + FileManager.getMessage(ConfigMessage.NO_ONE_IS_BANNED)));
+                    }
+                    for (String allBanned : BanManager.getBannedPlayers()) {
+                        sender.sendMessage(TextComponent.fromLegacyText(Main.getInstance().getPrefix() + allBanned + "§9(§eGrund: §r§c " + BanManager.getReason(getUUID(allBanned)) + "§7)"));
+                    }
+                    return;
                 }
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
+                String playername = args[0];
+                try {
+                    player.sendMessage(TextComponent.fromLegacyText(Main.getInstance().getPrefix() + FileManager.getMessage(ConfigMessage.CHECK_IF_BANNED).replace("%playername%", playername) + (BanManager.isBanned(getUUID(playername)) ? FileManager.getMessage(ConfigMessage.CHECK_IS_BANNED) : FileManager.getMessage(ConfigMessage.CHECK_IS_NOT_BANNED))));
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+                try {
+                    if (BanManager.isBanned(getUUID(playername))) {
+                        player.sendMessage(TextComponent.fromLegacyText(Main.getInstance().getPrefix() + ChatColor.YELLOW + "Grund: " + ChatColor.RED + BanManager.getReason(getUUID(playername))));
+                        player.sendMessage(TextComponent.fromLegacyText(Main.getInstance().getPrefix() + ChatColor.YELLOW + "Verbleibende Zeit: " + ChatColor.RED + BanManager.getRemainingTime(getUUID(playername))));
+                    }
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
             }
-            return;
+            default -> {
+                player.sendMessage(TextComponent.fromLegacyText(Main.getInstance().getPrefix() + ChatColor.RED + "Verwendung: /check <nutzer>"));
+                player.sendMessage(TextComponent.fromLegacyText(Main.getInstance().getPrefix() + ChatColor.RED + "Verwendung: /check list"));
+            }
         }
-        player.sendMessage(plugin.getPrefix() + ChatColor.RED + "Verwendung: /check <nutzer>");
-        player.sendMessage(plugin.getPrefix() + ChatColor.RED + "Verwendung: /check list");
     }
 
     private String getUUID(String playername) {
-        ProxiedPlayer player = plugin.getProxy().getPlayer(playername);
+        ProxiedPlayer player = Main.getInstance().getProxy().getPlayer(playername);
         if (player != null) {
             return player.getUniqueId().toString();
         } else {

@@ -1,8 +1,11 @@
 package de.subscripted.advancedvbanhammer.enums;
 
+import lombok.Getter;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
 public enum BanUnit {
 
     SECOND("Sekunde(n)", 1, "s"),
@@ -11,26 +14,14 @@ public enum BanUnit {
     DAY("Tag(e)", 24 * 60 * 60, "d"),
     WEEK("Woche(n)", 7 * 24 * 60 * 60, "w");
 
-    private String name;
-    private long toSecond;
-    private String shortcut;
+    private final String name;
+    private final long toSecond;
+    private final String shortcut;
 
-    private BanUnit(String name, long toSecond, String shortcut) {
+    BanUnit(String name, long toSecond, String shortcut) {
         this.name = name;
         this.toSecond = toSecond;
         this.shortcut = shortcut;
-    }
-
-    public long getToSecond() {
-        return toSecond;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getShortcut() {
-        return shortcut;
     }
 
     public static List<String> getUnitAsString() {

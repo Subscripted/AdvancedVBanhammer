@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.UUID;
 
 public class MuteManager {
-    private Map<UUID, Boolean> mutedPlayers;
+    private final Map<UUID, Boolean> mutedPlayers;
 
     public MuteManager() {
         mutedPlayers = new HashMap<>();

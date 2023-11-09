@@ -6,6 +6,7 @@ import de.subscripted.advancedvbanhammer.enums.ConfigMessage;
 import de.subscripted.advancedvbanhammer.enums.ListMessage;
 import de.subscripted.advancedvbanhammer.enums.Permissions;
 import de.subscripted.advancedvbanhammer.sql.MySQL;
+import lombok.Getter;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.config.Configuration;
@@ -13,7 +14,6 @@ import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -26,9 +26,12 @@ public class FileManager {
     private static File mysqlFile;
     private static File banIdsFile;
     private static File tempBanIdsFile;
+    @Getter
     private static Configuration config;
     private static Configuration mysqlConfig;
+    @Getter
     private static Configuration banIdsConfig;
+    @Getter
     private static Configuration tempBanIdConfig;
 
     public static void setup(Plugin plugin) {
@@ -89,24 +92,18 @@ public class FileManager {
         setDefaultTempBanIdConfig();
     }
 
-    public static Configuration getConfig() {
-        return config;
-    }
-
     public static Configuration getMySQLConfig() {
         return mysqlConfig;
     }
 
-    public static Configuration getBanIdsConfig() {
-        return banIdsConfig;
-    }
-
-    public static Configuration getTempBanIdConfig() {
-        return tempBanIdConfig;
-    }
-
     public static void setDefaultConfig() {
         Configuration cfg = getConfig();
+
+        // Webhook-URL
+
+        if (!cfg.contains("webhook-url")){
+            cfg.set("webhook-url", "https://your-webhook-url-here/");
+        }
 
         // Prefix
 
@@ -114,6 +111,7 @@ public class FileManager {
             cfg.set("prefix", "&a&lVarilx &7&l· ");
 
             //Messages
+
 
         }
         if (!cfg.contains("message.player_not_found")) {
@@ -224,7 +222,6 @@ public class FileManager {
             e.printStackTrace();
         }
     }
-
 
     public static void readConfig() {
         Main.getInstance().setPrefix(ChatColor.translateAlternateColorCodes('&', config.getString("prefix") + " §r"));
