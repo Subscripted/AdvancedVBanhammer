@@ -9,8 +9,10 @@ import net.md_5.bungee.api.plugin.Command;
 
 public class MuteCommand extends Command {
 
+    private static final String MUTE_COMMAND_NAME = "mute";
+
     public MuteCommand() {
-        super("mute");
+        super(MUTE_COMMAND_NAME);
     }
 
     @Override

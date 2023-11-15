@@ -2,6 +2,7 @@ package de.subscripted.advancedvbanhammer.commands;
 
 import de.subscripted.advancedvbanhammer.Main;
 import de.subscripted.advancedvbanhammer.enums.ConfigMessage;
+import de.subscripted.advancedvbanhammer.enums.Permissions;
 import de.subscripted.advancedvbanhammer.utils.BanManager;
 import de.subscripted.advancedvbanhammer.utils.FileManager;
 import de.subscripted.advancedvbanhammer.utils.UUIDFetcher;
@@ -15,14 +16,23 @@ import java.util.UUID;
 
 public class UnbanCommand extends Command {
 
+    private static final String UNBAN_COMMAND_NAME = "unban";
+    private static final String UNBAN_PERMISSIONS = FileManager.getPermission(Permissions.PERMISSION_UNBAN);
+    private static final String ALL_PERMISSIONS = FileManager.getPermission(Permissions.PERMISSION_ALL);
+
     public UnbanCommand() {
-        super("unban");
+        super(UNBAN_COMMAND_NAME);
     }
 
     @Override
     public void execute(CommandSender sender, String[] args) {
         if (!(sender instanceof ProxiedPlayer player)) {
             sender.sendMessage(TextComponent.fromLegacyText(FileManager.getMessage(ConfigMessage.SENDER_IS_CONSOLE)));
+            return;
+        }
+
+        if (!sender.hasPermission(UNBAN_PERMISSIONS) || !sender.hasPermission(ALL_PERMISSIONS)){
+            sender.sendMessage("No Permissions");
             return;
         }
 

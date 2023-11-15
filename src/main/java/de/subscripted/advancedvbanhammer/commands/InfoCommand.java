@@ -15,13 +15,17 @@ import java.util.List;
 
 public class InfoCommand extends Command implements TabExecutor {
 
+    private static final String MANAGER_COMMAND_NAME = "banmanager";
+
+
     public InfoCommand() {
-        super("bancontroller");
+        super(MANAGER_COMMAND_NAME);
     }
 
     @Override
     public void execute(CommandSender sender, String[] args) {
-        ProxiedPlayer player = (ProxiedPlayer) sender;
+
+        final var player = (ProxiedPlayer) sender;
 
         if (!(sender instanceof ProxiedPlayer)) {
             sender.sendMessage(TextComponent.fromLegacyText(FileManager.getMessage(ConfigMessage.SENDER_IS_CONSOLE)));

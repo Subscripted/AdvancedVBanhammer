@@ -29,7 +29,7 @@ public class PlayerLogin implements Listener {
                 String banMessage = FileManager.getlist(ListMessage.YOU_GOT_BANNED_TEMP)
                         .toString()
                         .substring(1, FileManager.getlist(ListMessage.YOU_GOT_BANNED_TEMP)
-                                .toString().length() - 1)
+                        .toString().length() - 1)
                         .replace("%reason%", reason)
                         .replace("%time%", remainingTime)
                         .replace(", ", "\n")

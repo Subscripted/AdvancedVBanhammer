@@ -1,4 +1,4 @@
-package de.subscripted.advancedvbanhammer.commands;
+package de.subscripted.advancedvbanhammer.todo;
 
 import de.subscripted.advancedvbanhammer.enums.ConfigMessage;
 import de.subscripted.advancedvbanhammer.utils.FileManager;

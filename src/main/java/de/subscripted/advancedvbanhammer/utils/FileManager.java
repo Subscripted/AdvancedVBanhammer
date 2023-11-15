@@ -160,7 +160,10 @@ public class FileManager {
             cfg.set("message.check_if_banned", "&7Name: &c%playername%§ " + "\n" + "&7Gebannt: ");
         }
         if (!cfg.contains("message.unbanned_player")) {
-            cfg.set("message.unbanned_player", "&7Du hast &c%playername%§ &7entbann!");
+            cfg.set("message.unbanned_player", "&7Du hast &c%playername%§ &7entbannt!");
+        }
+        if (!cfg.contains("message.player_ban_status_check_who_banned")) {
+            cfg.set("message.unbanned_player", "&e%bannername% &7hat &c%playername% &7gebannt!");
         }
         if (!cfg.contains("message.unban_usage")) {
             cfg.set("message.unban_usage", "&cBenutze /unban <playername>");
@@ -179,6 +182,9 @@ public class FileManager {
         }
         if (!cfg.contains("message.kick_usage")) {
             cfg.set("message.kick_usage", "&c/kick <playername> <reason>");
+        }
+        if (!cfg.contains("message.get_all_banned_with_reason")) {
+            cfg.set("message.get_all_banned_with_reason", "%bannedPlayer% &cGrund: %reason%");
         }
 
 
@@ -199,6 +205,12 @@ public class FileManager {
         if (!cfg.contains("permissions.permission_seebanbroadcast")) {
             cfg.set("permissions.permission_seebanbroadcast", "bancontroller.seebanbroadcast");
         }
+        if (!cfg.contains("permissions.permission_kick")){
+            cfg.set("permissions.permission_kick", "bancontroller.kick");
+        }
+        if (!cfg.contains("permissions.permission_unban")){
+            cfg.set("permissions.permission_unban", "bancontroller.unban");
+        }
 
         //Lists
         List<String> kicklist = new ArrayList<>();
@@ -214,6 +226,13 @@ public class FileManager {
         banlist.add("&7Verbleibende Zeit: &c%time%");
         if (!cfg.contains("lists.you_got_banned_temp")) {
             cfg.set("lists.you_got_banned_temp", banlist);
+        }
+
+        List<String> allbannedList = new ArrayList<>();
+        allbannedList.add("&7Grund: &c%reason%");
+        allbannedList.add("&7Verbleibende Zeit: &e%time%");
+        if (!cfg.contains("lists.all_banned_reason_and_time")){
+            cfg.set("lists.all_banned_reason_and_time", allbannedList);
         }
 
         try {

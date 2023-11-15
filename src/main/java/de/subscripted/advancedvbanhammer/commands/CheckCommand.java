@@ -2,6 +2,8 @@ package de.subscripted.advancedvbanhammer.commands;
 
 import de.subscripted.advancedvbanhammer.Main;
 import de.subscripted.advancedvbanhammer.enums.ConfigMessage;
+import de.subscripted.advancedvbanhammer.enums.ListMessage;
+import de.subscripted.advancedvbanhammer.enums.Permissions;
 import de.subscripted.advancedvbanhammer.utils.BanManager;
 import de.subscripted.advancedvbanhammer.utils.FileManager;
 import de.subscripted.advancedvbanhammer.utils.UUIDFetcher;
@@ -17,8 +19,12 @@ import java.util.UUID;
 
 public class CheckCommand extends Command {
 
+    private static final String CHECK_COMMAND_NAME = "check";
+    private static final String KICK_PERMISSION = FileManager.getPermission(Permissions.PERMISSION_KICK);
+    private static final String ALL_PERMISSION = FileManager.getPermission(Permissions.PERMISSION_ALL);
+
     public CheckCommand() {
-        super("check");
+        super(CHECK_COMMAND_NAME);
     }
 
     @Override
@@ -28,6 +34,16 @@ public class CheckCommand extends Command {
             return;
         }
 
+        /*
+
+        if (!sender.hasPermission(KICK_PERMISSION) || !sender.hasPermission(ALL_PERMISSION)){
+            sender.sendMessage("No Permissions");
+            return;
+        }
+
+
+         */
+
         switch (args.length) {
             case 1 -> {
                 if (args[0].equalsIgnoreCase("list")) {
@@ -36,20 +52,20 @@ public class CheckCommand extends Command {
                         sender.sendMessage(TextComponent.fromLegacyText(Main.getInstance().getPrefix() + FileManager.getMessage(ConfigMessage.NO_ONE_IS_BANNED)));
                     }
                     for (String allBanned : BanManager.getBannedPlayers()) {
-                        sender.sendMessage(TextComponent.fromLegacyText(Main.getInstance().getPrefix() + allBanned + "§9(§eGrund: §r§c " + BanManager.getReason(getUUID(allBanned)) + "§7)"));
+                        sender.sendMessage(TextComponent.fromLegacyText(Main.getInstance().getPrefix() + FileManager.getMessage(ConfigMessage.GET_ALL_BANNED_WITH_REASON).replace("%bannedPlayer%", allBanned).replace("%reason%", BanManager.getReason(getUUID(allBanned)))));
                     }
                     return;
                 }
-                String playername = args[0];
+                String PLAYER_NAME = args[0];
                 try {
-                    player.sendMessage(TextComponent.fromLegacyText(Main.getInstance().getPrefix() + FileManager.getMessage(ConfigMessage.CHECK_IF_BANNED).replace("%playername%", playername) + (BanManager.isBanned(getUUID(playername)) ? FileManager.getMessage(ConfigMessage.CHECK_IS_BANNED) : FileManager.getMessage(ConfigMessage.CHECK_IS_NOT_BANNED))));
+                    player.sendMessage(TextComponent.fromLegacyText(Main.getInstance().getPrefix() + FileManager.getMessage(ConfigMessage.CHECK_IF_BANNED).replace("%playername%", PLAYER_NAME) + (BanManager.isBanned(getUUID(PLAYER_NAME)) ? FileManager.getMessage(ConfigMessage.CHECK_IS_BANNED) : FileManager.getMessage(ConfigMessage.CHECK_IS_NOT_BANNED))));
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
                 }
                 try {
-                    if (BanManager.isBanned(getUUID(playername))) {
-                        player.sendMessage(TextComponent.fromLegacyText(Main.getInstance().getPrefix() + ChatColor.YELLOW + "Grund: " + ChatColor.RED + BanManager.getReason(getUUID(playername))));
-                        player.sendMessage(TextComponent.fromLegacyText(Main.getInstance().getPrefix() + ChatColor.YELLOW + "Verbleibende Zeit: " + ChatColor.RED + BanManager.getRemainingTime(getUUID(playername))));
+                    if (BanManager.isBanned(getUUID(PLAYER_NAME))) {
+                        player.sendMessage(TextComponent.fromLegacyText(Main.getInstance().getPrefix() + FileManager.getlist(ListMessage.ALL_BANNED_REASON_AND_TIME)).toString().replace("%reason%", BanManager.getReason(getUUID(PLAYER_NAME)).replace("%time%", BanManager.getRemainingTime(getUUID(PLAYER_NAME)))));
+                        player.sendMessage(TextComponent.fromLegacyText(Main.getInstance().getPrefix() + FileManager.getMessage(ConfigMessage.PLAYER_BAN_STATUS_CHECK_WHO_BANNED).replace("%bannername%", BanManager.getWhoBanned(getUUID(PLAYER_NAME))).replace("%playername%", PLAYER_NAME)));
                     }
                 } catch (SQLException e) {
                     throw new RuntimeException(e);

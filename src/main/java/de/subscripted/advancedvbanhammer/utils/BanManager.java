@@ -23,16 +23,17 @@ public class BanManager {
     }
 
 
-    public static void ban(String uuid, String playername, String reason, long seconds) {
+    public static void ban(String uuid, String playername, String reason, long seconds, String sendername) {
         long end = (seconds == -1) ? -1 : System.currentTimeMillis() + (seconds * 1000);
         ProxiedPlayer player = ProxyServer.getInstance().getPlayer(playername);
         String IP = null;
 
-        try (PreparedStatement statement = MySQL.getConnection().get().prepareStatement("INSERT INTO BannedPlayers (Spielername, UUID, Ende, Grund) VALUES (?, ?, ?, ?)")) {
+        try (PreparedStatement statement = MySQL.getConnection().get().prepareStatement("INSERT INTO BannedPlayers (Spielername, UUID, Ende, Grund, Sender) VALUES (?, ?, ?, ?, ?)")) {
             statement.setString(1, playername);
             statement.setString(2, uuid);
             statement.setLong(3, end);
             statement.setString(4, reason);
+            statement.setString(5, sendername);
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -199,6 +200,23 @@ public class BanManager {
             throw new RuntimeException(e);
         }
         return "";
+
     }
 
+    public static String getWhoBanned(String uuid) {
+        try (PreparedStatement statement = MySQL.getConnection().get().prepareStatement("SELECT Sender FROM BannedPlayers WHERE UUID = ?")) {
+            statement.setString(1, uuid);
+            ResultSet rs = statement.executeQuery();
+            if (rs.next()) {
+                return rs.getString("Sender");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        return "Unknown";
+    }
 }

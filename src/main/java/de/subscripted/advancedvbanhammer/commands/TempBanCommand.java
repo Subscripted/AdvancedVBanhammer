@@ -21,8 +21,14 @@ import java.util.List;
 import java.util.UUID;
 
 public class TempBanCommand extends Command implements TabExecutor {
+
+    private final static String TEMPBAN_COMMAND_NAME = "tempban";
+    private final static String TEMPBAN_PERMISSIONS = FileManager.getPermission(Permissions.PERMISSION_TEMPBAN);
+    private final static String ALL_PERMISSIONS = FileManager.getPermission(Permissions.PERMISSION_ALL);
+
+
     public TempBanCommand() {
-        super("tempban");
+        super(TEMPBAN_COMMAND_NAME);
     }
 
     @Override
@@ -32,8 +38,14 @@ public class TempBanCommand extends Command implements TabExecutor {
             return;
         }
 
+        if (!sender.hasPermission(TEMPBAN_PERMISSIONS) || !sender.hasPermission(ALL_PERMISSIONS)){
+            sender.sendMessage("No Permissions");
+            return;
+        }
+
         if (args.length >= 2) {
             String playername = args[0];
+            String senderName = sender.getName();
             try {
                 if (BanManager.isBanned(getUUID(playername))) {
                     player.sendMessage(TextComponent.fromLegacyText(Main.getInstance().getPrefix() + FileManager.getMessage(ConfigMessage.PLAYER_IS_BANNED).replace("%playername%", playername)));
@@ -44,6 +56,7 @@ public class TempBanCommand extends Command implements TabExecutor {
             }
 
             int banId;
+
             try {
                 banId = Integer.parseInt(args[1]);
             } catch (NumberFormatException e) {
@@ -59,7 +72,7 @@ public class TempBanCommand extends Command implements TabExecutor {
             if (banReason != null && banTimeString != null) {
                 long time = parseTime(banTimeString);
                 if (time > 0) {
-                    BanManager.ban(getUUID(playername), playername, banReason, time);
+                    BanManager.ban(getUUID(playername), playername, banReason, time, senderName);
                     player.sendMessage(TextComponent.fromLegacyText(Main.getInstance().getPrefix() + FileManager.getMessage(ConfigMessage.TEMP_BAN_MESSAGE)
                             .replace("%playername%", playername)
                             .replace("%time%", banTimeString)

@@ -2,6 +2,7 @@ package de.subscripted.advancedvbanhammer.reg;
 
 import de.subscripted.advancedvbanhammer.Main;
 import de.subscripted.advancedvbanhammer.commands.*;
+import de.subscripted.advancedvbanhammer.todo.WhatIsBan;
 
 public class CommandRegistry {
 

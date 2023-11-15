@@ -20,8 +20,11 @@ import java.util.List;
 import java.util.UUID;
 
 public class BanCommand extends Command implements TabExecutor {
+
     private static final String PLACEHOLDER = "%playername%";
     private static final String BAN_COMMAND_NAME = "perm-ban";
+    private static final String permissionAll = FileManager.getPermission(Permissions.PERMISSION_ALL);
+    private static final String permissionBan = FileManager.getPermission(Permissions.PERMISSION_BAN);
 
     public BanCommand() {
         super(BAN_COMMAND_NAME);
@@ -34,9 +37,20 @@ public class BanCommand extends Command implements TabExecutor {
             return;
         }
 
+/*
+        if (!sender.hasPermission(permissionBan) || !sender.hasPermission(permissionAll)) {
+            sender.sendMessage("No perms!");
+            return;
+        }
+
+ */
+
+
+
         if (args.length == 2) {
             String playername = args[0];
             String banIdStr = args[1];
+            String senderName = sender.getName();
 
             try {
                 int banId = Integer.parseInt(banIdStr);
@@ -52,7 +66,7 @@ public class BanCommand extends Command implements TabExecutor {
 
                 if (banIdsConfig != null && banIdsConfig.contains(banIdPath)) {
                     String reason = banIdsConfig.getString(banIdPath);
-                    BanManager.ban(getUUID(playername), playername, reason, -1);
+                    BanManager.ban(getUUID(playername), playername, reason, -1, senderName);
 
                     sendBanBroadcast(player, playername, reason);
                     player.sendMessage(TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&', banMessage)));
