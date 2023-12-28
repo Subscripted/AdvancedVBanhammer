@@ -101,7 +101,7 @@ public class FileManager {
 
         // Webhook-URL
 
-        if (!cfg.contains("webhook-url")){
+        if (!cfg.contains("webhook-url")) {
             cfg.set("webhook-url", "https://your-webhook-url-here/");
         }
 
@@ -116,6 +116,10 @@ public class FileManager {
         }
         if (!cfg.contains("message.player_not_found")) {
             cfg.set("message.player_not_found", "&cDer von dir angegebene Spieler wurde nicht gefunden!");
+
+        }
+        if (!cfg.contains("message.no_permission")) {
+            cfg.set("message.no_permission", "&l&cYou dont have any Permissions to perform that Command!");
         }
         if (!cfg.contains("message.player_is_banned")) {
             cfg.set("message.player_is_banned", "&c %playername% ist bereits gebannt! ");
@@ -205,10 +209,10 @@ public class FileManager {
         if (!cfg.contains("permissions.permission_seebanbroadcast")) {
             cfg.set("permissions.permission_seebanbroadcast", "bancontroller.seebanbroadcast");
         }
-        if (!cfg.contains("permissions.permission_kick")){
+        if (!cfg.contains("permissions.permission_kick")) {
             cfg.set("permissions.permission_kick", "bancontroller.kick");
         }
-        if (!cfg.contains("permissions.permission_unban")){
+        if (!cfg.contains("permissions.permission_unban")) {
             cfg.set("permissions.permission_unban", "bancontroller.unban");
         }
 
@@ -231,7 +235,7 @@ public class FileManager {
         List<String> allbannedList = new ArrayList<>();
         allbannedList.add("&7Grund: &c%reason%");
         allbannedList.add("&7Verbleibende Zeit: &e%time%");
-        if (!cfg.contains("lists.all_banned_reason_and_time")){
+        if (!cfg.contains("lists.all_banned_reason_and_time")) {
             cfg.set("lists.all_banned_reason_and_time", allbannedList);
         }
 

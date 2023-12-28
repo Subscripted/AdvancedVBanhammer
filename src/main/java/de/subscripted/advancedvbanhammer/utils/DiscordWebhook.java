@@ -3,6 +3,7 @@ package de.subscripted.advancedvbanhammer.utils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import lombok.SneakyThrows;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.IOException;
@@ -38,6 +39,7 @@ public class DiscordWebhook {
 
     public void addEmbedObjects(EmbedObject... objects) {
 
+
         try {
             for (EmbedObject object : objects) {
                 this.content.get("embeds").getAsJsonArray().add(object.toJsonObject());
@@ -53,7 +55,8 @@ public class DiscordWebhook {
 
     }
 
-    public void execute() throws IOException {
+    @SneakyThrows
+    public void execute() {
         if (this.url == null) {
             throw new IllegalArgumentException("Url is empty");
         }

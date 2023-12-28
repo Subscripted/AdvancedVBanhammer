@@ -1,6 +1,8 @@
 package de.subscripted.advancedvbanhammer.enums;
 
 public enum ConfigMessage {
+    NO_PERMISSION,
+
     WEBHOOK_URL,
     SENDER_IS_CONSOLE,
     PLAYER_NOT_FOUND,

@@ -19,6 +19,7 @@ public class UnbanCommand extends Command {
     private static final String UNBAN_COMMAND_NAME = "unban";
     private static final String UNBAN_PERMISSIONS = FileManager.getPermission(Permissions.PERMISSION_UNBAN);
     private static final String ALL_PERMISSIONS = FileManager.getPermission(Permissions.PERMISSION_ALL);
+    private final static String NO_PERMISSION = FileManager.getMessage(ConfigMessage.NO_PERMISSION);
 
     public UnbanCommand() {
         super(UNBAN_COMMAND_NAME);
@@ -31,8 +32,8 @@ public class UnbanCommand extends Command {
             return;
         }
 
-        if (!sender.hasPermission(UNBAN_PERMISSIONS) || !sender.hasPermission(ALL_PERMISSIONS)){
-            sender.sendMessage("No Permissions");
+        if (!sender.hasPermission(UNBAN_PERMISSIONS) || !sender.hasPermission(ALL_PERMISSIONS)) {
+            sender.sendMessage(NO_PERMISSION);
             return;
         }
 

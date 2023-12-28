@@ -26,6 +26,9 @@ public class WhatIsBan extends Command implements TabExecutor {
             return;
         }
 
+
+
+
         if (args.length == 1 && args[0].equalsIgnoreCase("temp")) {
             Set<String> reasonIds = new HashSet<>(FileManager.getTempBanIdConfig().getSection("temp-ban-ids").getKeys());
             StringBuilder reasonsMessage = new StringBuilder(" §7TempBan Reasons:\n");
@@ -52,6 +55,7 @@ public class WhatIsBan extends Command implements TabExecutor {
         }
     }
 
+
     @Override
     public Iterable<String> onTabComplete(CommandSender sender, String[] args) {
         List<String> list = new ArrayList<>();
@@ -66,7 +70,6 @@ public class WhatIsBan extends Command implements TabExecutor {
         long seconds = Long.parseLong(time.substring(0, time.length() - 1));
         char unit = time.charAt(time.length() - 1);
         String unitName;
-
         switch (unit) {
             case 's':
                 unitName = "Sekunde(n)";

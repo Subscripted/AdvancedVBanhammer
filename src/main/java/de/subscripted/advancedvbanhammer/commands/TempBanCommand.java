@@ -25,6 +25,8 @@ public class TempBanCommand extends Command implements TabExecutor {
     private final static String TEMPBAN_COMMAND_NAME = "tempban";
     private final static String TEMPBAN_PERMISSIONS = FileManager.getPermission(Permissions.PERMISSION_TEMPBAN);
     private final static String ALL_PERMISSIONS = FileManager.getPermission(Permissions.PERMISSION_ALL);
+    private final static String NO_PERMISSION = FileManager.getMessage(ConfigMessage.NO_PERMISSION);
+    private final static Configuration BAN_ID_CONFIG = FileManager.getTempBanIdConfig();
 
 
     public TempBanCommand() {
@@ -38,8 +40,8 @@ public class TempBanCommand extends Command implements TabExecutor {
             return;
         }
 
-        if (!sender.hasPermission(TEMPBAN_PERMISSIONS) || !sender.hasPermission(ALL_PERMISSIONS)){
-            sender.sendMessage("No Permissions");
+        if (!sender.hasPermission(TEMPBAN_PERMISSIONS) || !sender.hasPermission(ALL_PERMISSIONS)) {
+            sender.sendMessage(NO_PERMISSION);
             return;
         }
 
@@ -55,8 +57,8 @@ public class TempBanCommand extends Command implements TabExecutor {
                 throw new RuntimeException(e);
             }
 
-            int banId;
 
+            int banId;
             try {
                 banId = Integer.parseInt(args[1]);
             } catch (NumberFormatException e) {
@@ -64,26 +66,26 @@ public class TempBanCommand extends Command implements TabExecutor {
                 return;
             }
 
-            Configuration banIdsConfig = FileManager.getTempBanIdConfig();
-            String banIdStr = String.valueOf(banId);
-            String banReason = banIdsConfig.getString("temp-ban-ids." + banIdStr + ".name");
-            String banTimeString = banIdsConfig.getString("temp-ban-ids." + banIdStr + ".time");
 
-            if (banReason != null && banTimeString != null) {
-                long time = parseTime(banTimeString);
+            String BAN_ID_STRING = String.valueOf(banId);
+            String BAN_REASON = BAN_ID_CONFIG.getString("temp-ban-ids." + BAN_ID_STRING + ".name");
+            String BAN_TIME_STRING = BAN_ID_CONFIG.getString("temp-ban-ids." + BAN_ID_STRING + ".time");
+
+            if (BAN_REASON != null && BAN_TIME_STRING != null) {
+                long time = parseTime(BAN_TIME_STRING);
                 if (time > 0) {
-                    BanManager.ban(getUUID(playername), playername, banReason, time, senderName);
+                    BanManager.ban(getUUID(playername), playername, BAN_REASON, time, senderName);
                     player.sendMessage(TextComponent.fromLegacyText(Main.getInstance().getPrefix() + FileManager.getMessage(ConfigMessage.TEMP_BAN_MESSAGE)
                             .replace("%playername%", playername)
-                            .replace("%time%", banTimeString)
+                            .replace("%time%", BAN_TIME_STRING)
                             .replace("%unit%", "")));
                     for (ProxiedPlayer onlinePlayer : ProxyServer.getInstance().getPlayers()) {
                         if (onlinePlayer.hasPermission(FileManager.getPermission(Permissions.PERMISSION_SEEBANBROADCAST))) {
                             onlinePlayer.sendMessage(FileManager.getMessage(ConfigMessage.PLAYER_TEMP_BANNED_BROADCAST)
                                     .replace("%playername%", playername)
-                                    .replace("%reason%", banReason)
+                                    .replace("%reason%", BAN_REASON)
                                     .replace("%player%", player.getDisplayName())
-                                    .replace("%time%", banTimeString));
+                                    .replace("%time%", BAN_TIME_STRING));
                         }
                     }
                 } else {
@@ -96,6 +98,7 @@ public class TempBanCommand extends Command implements TabExecutor {
         }
         player.sendMessage(TextComponent.fromLegacyText(Main.getInstance().getPrefix() + FileManager.getMessage(ConfigMessage.TEMP_BAN_USAGE)));
     }
+
 
     private long parseTime(String timeString) {
         try {

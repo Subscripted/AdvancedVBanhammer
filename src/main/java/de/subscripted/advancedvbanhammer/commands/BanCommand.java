@@ -6,6 +6,9 @@ import de.subscripted.advancedvbanhammer.enums.Permissions;
 import de.subscripted.advancedvbanhammer.utils.BanManager;
 import de.subscripted.advancedvbanhammer.utils.FileManager;
 import de.subscripted.advancedvbanhammer.utils.UUIDFetcher;
+import lombok.SneakyThrows;
+import lombok.Getter;
+import lombok.Setter;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -17,8 +20,9 @@ import net.md_5.bungee.config.Configuration;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
+@Getter
+@Setter
 public class BanCommand extends Command implements TabExecutor {
 
     private static final String PLACEHOLDER = "%playername%";
@@ -31,21 +35,12 @@ public class BanCommand extends Command implements TabExecutor {
     }
 
     @Override
+    @SneakyThrows
     public void execute(CommandSender sender, String[] args) {
         if (!(sender instanceof ProxiedPlayer player)) {
             sender.sendMessage(TextComponent.fromLegacyText(Main.getInstance().getPrefix() + FileManager.getMessage(ConfigMessage.SENDER_IS_CONSOLE)));
             return;
         }
-
-/*
-        if (!sender.hasPermission(permissionBan) || !sender.hasPermission(permissionAll)) {
-            sender.sendMessage("No perms!");
-            return;
-        }
-
- */
-
-
 
         if (args.length == 2) {
             String playername = args[0];
@@ -105,8 +100,7 @@ public class BanCommand extends Command implements TabExecutor {
         if (player != null) {
             return player.getUniqueId().toString();
         } else {
-            UUID uuid = UUIDFetcher.getUUID(playername);
-            return (uuid != null) ? uuid.toString() : null;
+            return UUIDFetcher.getUUID(playername).toString();
         }
     }
 

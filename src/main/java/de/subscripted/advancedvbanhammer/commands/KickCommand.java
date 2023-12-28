@@ -12,12 +12,12 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 
 
-
 public class KickCommand extends Command {
 
     private static final String KICK_COMMAND_NAME = "kick";
     private static final String ALL_PERMISSIONS = FileManager.getPermission(Permissions.PERMISSION_ALL);
     private static final String KICK_PERMISSIONS = FileManager.getPermission(Permissions.PERMISSION_KICK);
+    private final static String NO_PERMISSION = FileManager.getMessage(ConfigMessage.NO_PERMISSION);
 
     public KickCommand() {
         super(KICK_COMMAND_NAME);
@@ -30,8 +30,8 @@ public class KickCommand extends Command {
             return;
         }
 
-        if (!sender.hasPermission(ALL_PERMISSIONS) || !sender.hasPermission(KICK_PERMISSIONS)){
-            sender.sendMessage("No Permissions");
+        if (!sender.hasPermission(ALL_PERMISSIONS) || !sender.hasPermission(KICK_PERMISSIONS)) {
+            sender.sendMessage(NO_PERMISSION);
             return;
         }
 
